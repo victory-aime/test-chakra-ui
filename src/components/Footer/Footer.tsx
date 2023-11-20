@@ -2,221 +2,21 @@
 
 import {
   Box,
-  Flex,
-  Text,
-  IconButton,
-  Button,
+  chakra,
+  Container,
+  SimpleGrid,
   Stack,
-  Collapse,
-  Icon,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
+  Text,
+  VisuallyHidden,
+  Input,
+  IconButton,
   useColorModeValue,
-  useBreakpointValue,
-  useDisclosure,
-  useColorMode,
 } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  MoonIcon,
-  SunIcon,
-} from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+import { ReactNode } from "react";
+import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import { BiMailSend } from "react-icons/bi";
 
-export default function Navbar() {
-  const { isOpen, onToggle } = useDisclosure();
-  const { colorMode, toggleColorMode } = useColorMode();
-
-  return (
-    <Box>
-      <Flex
-        bg={useColorModeValue("white", "gray.800")}
-        color={useColorModeValue("gray.600", "white")}
-        minH={"80px"}
-        py={{ base: 2 }}
-        px={{ base: 4 }}
-        borderBottom={1}
-        borderColor={useColorModeValue("gray.200", "gray.900")}
-        align={"center"}
-      >
-        <Flex
-          flex={{ base: 1, md: "auto" }}
-          ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}
-        >
-          <IconButton
-            onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
-            variant={"ghost"}
-            aria-label={"Toggle Navigation"}
-          />
-        </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Link to={"/"}>
-            <Logo color={useColorModeValue("gray.700", "white")} />
-          </Link>
-        </Flex>
-
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
-          spacing={6}
-        >
-          <Button alignSelf="center" ml={4} onClick={toggleColorMode}>
-            {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-          </Button>
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"#"}
-          >
-            <Link to={"/login"}>Sign In</Link>
-          </Button>
-          <Button
-            as={"a"}
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            href={"#"}
-            _hover={{
-              bg: "pink.500",
-            }}
-          >
-            Sign Up
-          </Button>
-        </Stack>
-      </Flex>
-      <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
-      </Collapse>
-    </Box>
-  );
-}
-
-const MobileNav = () => {
-  return (
-    <Stack
-      bg={useColorModeValue("white", "gray.800")}
-      p={4}
-      display={{ md: "none" }}
-    >
-      {NAV_ITEMS.map((navItem) => (
-        <MobileNavItem key={navItem.label} {...navItem} />
-      ))}
-    </Stack>
-  );
-};
-
-const MobileNavItem = ({ label, children, href }: NavItem) => {
-  const { isOpen, onToggle } = useDisclosure();
-
-  return (
-    <Stack spacing={4} onClick={children && onToggle}>
-      <Box
-        py={2}
-        as="a"
-        href={href ?? "#"}
-        justifyContent="space-between"
-        alignItems="center"
-        _hover={{
-          textDecoration: "none",
-        }}
-      >
-        <Text
-          fontWeight={600}
-          color={useColorModeValue("gray.600", "gray.200")}
-        >
-          {label}
-        </Text>
-        {children && (
-          <Icon
-            as={ChevronDownIcon}
-            transition={"all .25s ease-in-out"}
-            transform={isOpen ? "rotate(180deg)" : ""}
-            w={6}
-            h={6}
-          />
-        )}
-      </Box>
-
-      <Collapse in={isOpen} animateOpacity style={{ marginTop: "0!important" }}>
-        <Stack
-          mt={2}
-          pl={4}
-          borderLeft={1}
-          borderStyle={"solid"}
-          borderColor={useColorModeValue("gray.200", "gray.700")}
-          align={"start"}
-        >
-          {children &&
-            children.map((child) => (
-              <Box as="a" key={child.label} py={2} href={child.href}>
-                {child.label}
-              </Box>
-            ))}
-        </Stack>
-      </Collapse>
-    </Stack>
-  );
-};
-
-interface NavItem {
-  label: string;
-  subLabel?: string;
-  children?: Array<NavItem>;
-  href?: string;
-}
-
-const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Inspiration",
-    children: [
-      {
-        label: "Explore Design Work",
-        subLabel: "Trending Design to inspire you",
-        href: "#",
-      },
-      {
-        label: "New & Noteworthy",
-        subLabel: "Up-and-coming Designers",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Find Work",
-    children: [
-      {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
-        href: "#",
-      },
-      {
-        label: "Freelance Projects",
-        subLabel: "An exclusive list for contract work",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Learn Design",
-    href: "#",
-  },
-  {
-    label: "Hire Designers",
-    href: "#",
-  },
-];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Logo = (props: any) => {
   return (
     <svg
@@ -236,3 +36,139 @@ const Logo = (props: any) => {
     </svg>
   );
 };
+
+const SocialButton = ({
+  children,
+  label,
+  href,
+}: {
+  children: ReactNode;
+  label: string;
+  href: string;
+}) => {
+  return (
+    <chakra.button
+      bg={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
+      rounded={"full"}
+      w={8}
+      h={8}
+      cursor={"pointer"}
+      as={"a"}
+      href={href}
+      display={"inline-flex"}
+      alignItems={"center"}
+      justifyContent={"center"}
+      transition={"background 0.3s ease"}
+      _hover={{
+        bg: useColorModeValue("blackAlpha.200", "whiteAlpha.200"),
+      }}
+    >
+      <VisuallyHidden>{label}</VisuallyHidden>
+      {children}
+    </chakra.button>
+  );
+};
+
+const ListHeader = ({ children }: { children: ReactNode }) => {
+  return (
+    <Text fontWeight={"500"} fontSize={"lg"} mb={2}>
+      {children}
+    </Text>
+  );
+};
+
+export default function Footer() {
+  return (
+    <Box
+      bg={useColorModeValue("gray.50", "gray.900")}
+      color={useColorModeValue("gray.700", "gray.200")}
+      w="full"
+      h="full"
+    >
+      <Container as={Stack} maxW={"8xl"} py={10}>
+        <SimpleGrid
+          templateColumns={{ sm: "1fr 1fr", md: "2fr 1fr 1fr 2fr" }}
+          spacing={8}
+        >
+          <Stack spacing={6}>
+            <Box>
+              <Logo color={useColorModeValue("gray.700", "white")} />
+            </Box>
+            <Text fontSize={"sm"}>
+              © 2022 Chakra Templates. All rights reserved
+            </Text>
+            <Stack direction={"row"} spacing={6}>
+              <SocialButton label={"Twitter"} href={"#"}>
+                <FaTwitter />
+              </SocialButton>
+              <SocialButton label={"YouTube"} href={"#"}>
+                <FaYoutube />
+              </SocialButton>
+              <SocialButton label={"Instagram"} href={"#"}>
+                <FaInstagram />
+              </SocialButton>
+            </Stack>
+          </Stack>
+          <Stack align={"flex-start"}>
+            <ListHeader>Company</ListHeader>
+            <Box as="a" href={"#"}>
+              About us
+            </Box>
+            <Box as="a" href={"#"}>
+              Blog
+            </Box>
+            <Box as="a" href={"#"}>
+              Contact us
+            </Box>
+            <Box as="a" href={"#"}>
+              Pricing
+            </Box>
+            <Box as="a" href={"#"}>
+              Testimonials
+            </Box>
+          </Stack>
+          <Stack align={"flex-start"}>
+            <ListHeader>Support</ListHeader>
+            <Box as="a" href={"#"}>
+              Help Center
+            </Box>
+            <Box as="a" href={"#"}>
+              Terms of Service
+            </Box>
+            <Box as="a" href={"#"}>
+              Legal
+            </Box>
+            <Box as="a" href={"#"}>
+              Privacy Policy
+            </Box>
+            <Box as="a" href={"#"}>
+              Satus
+            </Box>
+          </Stack>
+          <Stack align={"flex-start"}>
+            <ListHeader>Stay up to date</ListHeader>
+            <Stack direction={"row"}>
+              <Input
+                placeholder={"Your email address"}
+                bg={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
+                border={0}
+                _focus={{
+                  bg: "whiteAlpha.300",
+                }}
+              />
+              <IconButton
+                bg={useColorModeValue("green.400", "green.800")}
+                color={useColorModeValue("white", "gray.800")}
+                _hover={{
+                  bg: "green.600",
+                }}
+                aria-label="Subscribe"
+                icon={<BiMailSend />}
+              />
+            </Stack>
+          </Stack>
+        </SimpleGrid>
+      </Container>
+    </Box>
+  );
+}
